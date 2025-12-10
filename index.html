@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUDMA Software Engineering CBT Practice Portal</title>
+  <style>
+    * * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Claude Chat Font */
+body {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+
+    /* Animated Claude-style gradient */
+    background: linear-gradient(45deg, #6A11CB, #2575FC, #FF5F6D, #FFC371);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
+
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Background Animation */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* =========================================
+   🔥 GLOBAL ANIMATED GRADIENT TEXT
+   ========================================= */
+h1, h2, h3, h4, h5, h6, p, label, span {
+    background: linear-gradient(90deg, #ff00c8, #7b2fff, #00c8ff, #ff00c8);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textGradient 6s ease infinite;
+}
+
+@keyframes textGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* =========================================
+   🔥 ANIMATED BUTTONS (Gradient + Hover)
+   ========================================= */
+.btn, .btn-secondary, .animated-btn, button {
+    background: linear-gradient(90deg, #7b2fff, #ff00b8, #ff6f61);
+    background-size: 300% 300%;
+    color: white;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: buttonGradient 5s ease infinite;
+    width: 100%;
+    margin-top: 10px;
+    font-family: inherit;
+}
+
+.btn:hover,
+.btn-secondary:hover,
+.animated-btn:hover,
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(255, 0, 200, 0.5);
+}
+
+@keyframes buttonGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* CONTAINER / LAYOUT */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+/* Keep text animated */
+.header h1, .header p {
+    -webkit-text-fill-color: transparent;
+}
+
+/* CONTENT AREA */
+.content {
+    padding: 40px;
+}
+
+.auth-section, 
+.course-selection, 
+.test-config, 
+.test-section, 
+.results-section {
+    display: none;
+}
+
+.auth-section.active, 
+.course-selection.active, 
+.test-config.active, 
+.test-section.active, 
+.results-section.active {
+    display: block;
+}
+
+/* FORM STYLING */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    font-family: inherit;
+    color: black;
+}
+
+.form-group input:focus, 
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* COURSE GRID */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.course-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 20px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    font-family: inherit;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* TEST CONFIG */
+.config-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.option-group {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.option-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.option-btn {
+    padding: 10px 20px;
+    border: 2px solid #667eea;
+    background: white;
+    color: #667eea;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.option-btn:hover, 
+.option-btn.selected {
+    background: #667eea;
+    color: white;
+}
+
+/* TEST TIMER */
+.timer-display {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #f44336;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+    z-index: 1000;
+}
+
+/* QUESTIONS */
+.question-container {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.question-number {
+    color: #667eea;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option {
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.3s;
+}
+
+.option:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+
+.option.selected {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+}
+
+/* RESULTS */
+.results-summary {
+    text-align: center;
+    padding: 40px;
+}
+
+.score-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 30px auto;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.results-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.result-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .config-options {
+        grid-template-columns: 1fr;
+    }
+
+    .results-details {
+        grid-template-columns: 1fr;
+    }
+
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+    <button class="logout-btn" id="logoutBtn" style="display: none;" onclick="logout()">Logout</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎓 FUDMA SOFTWARE ENGINEERING STUDENT</h1>
+            <h2>CBT PRACTICE PORTAL</h2>
+            <p>Federal University Dutsin-Ma, Katsina State</p>
+        </div>
+
+        <div class="content">
+            <!-- Authentication Section -->
+            <div class="auth-section active" id="authSection">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #333;">Welcome! Please Login or Register</h2>
+                
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password">
+                    </div>
+                    <button class="btn" onclick="login()">Login</button>
+                    <button class="btn btn-secondary" onclick="showRegister()">Register New Account</button>
+                </div>
+
+                <div id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="regName" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="regEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="regPassword" placeholder="Create a password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
+                    </div>
+                    <button class="btn" onclick="register()">Register</button>
+                    <button class="btn btn-secondary" onclick="showLogin()">Back to Login</button>
+                </div>
+            </div>
+
+            <!-- Course Selection Section -->
+            <div class="course-selection" id="courseSelection">
+                <div class="welcome-message">
+                    <h2>Welcome, <span id="userName"></span>!</h2>
+                    <p>Select a course to begin your practice session</p>
+                </div>
+
+                <div class="course-grid">
+                    <div class="course-card" onclick="selectCourse('COS101')">
+                        <h3>COS 101</h3>
+                        <p>Introduction to Computing Sciences</p>
+                        <p style="margin-top: 10px; font-size: 12px;">50 Questions Available</p>
+                    </div>
+                    <div class="course-card" onclick="selectCourse('PHY111')">
+                        <h3>PHY 111</h3>
+                        <p>General Physics I</p>
+                        <p style="margin-top: 10px; font-size: 12px;">50 Questions Available</p>
+                    </div>
+                    <div class="course-card" onclick="selectCourse('CSC101')">
+                        <h3>CSC 101</h3>
+                        <p>Computer Installation & Maintenance</p>
+                        <p style="margin-top: 10px; font-size: 12px;">50 Questions Available</p>
+                    </div>
+                    <div class="course-card" onclick="selectCourse('MTH101')">
+                        <h3>MTH 101</h3>
+                        <p>Elementary Mathematics I</p>
+                        <p style="margin-top: 10px; font-size: 12px;">50 Questions Available</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Configuration Section -->
+            <div class="test-config" id="testConfig">
+                <h2 style="text-align: center; margin-bottom: 10px; color: #333;">Configure Your Test</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 30px;">Course: <strong id="selectedCourseName"></strong></p>
+
+                <div class="config-options">
+                    <div class="option-group">
+                        <h3>Number of Questions</h3>
+                        <div class="option-buttons">
+                            <button class="option-btn" onclick="selectQuestionCount(10)">10</button>
+                            <button class="option-btn" onclick="selectQuestionCount(20)">20</button>
+                            <button class="option-btn" onclick="selectQuestionCount(30)">30</button>
+                            <button class="option-btn" onclick="selectQuestionCount(40)">40</button>
+                            <button class="option-btn" onclick="selectQuestionCount(50)">50</button>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <h3>Timer (Minutes)</h3>
+                        <div class="option-buttons">
+                            <button class="option-btn" onclick="selectTimer(5)">5</button>
+                            <button class="option-btn" onclick="selectTimer(10)">10</button>
+                            <button class="option-btn" onclick="selectTimer(15)">15</button>
+                            <button class="option-btn" onclick="selectTimer(20)">20</button>
+                            <button class="option-btn" onclick="selectTimer(30)">30</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="startTest()" style="margin-top: 30px;">Start Test</button>
+                <button class="btn btn-secondary" onclick="backToCourses()">Back to Courses</button>
+            </div>
+
+            <!-- Test Section -->
+            <div class="test-section" id="testSection">
+                <div class="timer-display" id="timerDisplay">00:00</div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+
+                <div class="question-container">
+                    <div class="question-number" id="questionNumber">Question 1 of 10</div>
+                    <div class="question-text" id="questionText"></div>
+                    <div class="options" id="optionsContainer"></div>
+                </div>
+
+                <div class="navigation">
+                    <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn">Previous</button>
+                    <button class="btn" onclick="nextQuestion()" id="nextBtn">Next</button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="results-summary">
+                    <h2 style="color: #333; margin-bottom: 20px;">Test Completed! 🎉</h2>
+                    
+                    <div class="score-circle">
+                        <div>
+                            <span id="scorePercentage">0</span>%
+                            <div class="score-label">Score</div>
+                        </div>
+                    </div>
+
+                    <div class="results-details">
+                        <div class="result-card">
+                            <h4>Correct Answers</h4>
+                            <p id="correctCount" style="color: #4caf50;">0</p>
+                        </div>
+                        <div class="result-card">
+                            <h4>Wrong Answers</h4>
+                            <p id="wrongCount" style="color: #f44336;">0</p>
+                        </div>
+                        <div class="result-card">
+                            <h4>Total Questions</h4>
+                            <p id="totalCount" style="color: #667eea;">0</p>
+                        </div>
+                    </div>
+
+                    <button class="btn" onclick="backToCourses()" style="margin-top: 30px;">Take Another Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question Bank
+        const questionBank = {
+            COS101: [
+                {q: "Who is considered the father of computing?", options: ["Charles Babbage", "Alan Turing", "John von Neumann", "Bill Gates"], correct: 0},
+                {q: "What does ENIAC stand for?", options: ["Electronic Numerical Integrator and Calculator", "Electronic Network Integration", "Enhanced Numerical Integration", "Electronic Number Calculator"], correct: 0},
+                {q: "Which generation of computers used vacuum tubes?", options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"], correct: 0},
+                {q: "Transistors were introduced in which generation?", options: ["First", "Second", "Third", "Fourth"], correct: 1},
+                {q: "What technology characterized third generation computers?", options: ["Vacuum tubes", "Transistors", "Integrated Circuits", "Microprocessors"], correct: 2},
+                {q: "Microprocessors were introduced in which generation?", options: ["Second", "Third", "Fourth", "Fifth"], correct: 2},
+                {q: "What does AI stand for?", options: ["Automated Intelligence", "Artificial Intelligence", "Advanced Integration", "Automated Integration"], correct: 1},
+                {q: "The first commercial computer was?", options: ["ENIAC", "UNIVAC I", "IBM 701", "EDVAC"], correct: 1},
+                {q: "Who invented the World Wide Web?", options: ["Bill Gates", "Steve Jobs", "Tim Berners-Lee", "Mark Zuckerberg"], correct: 2},
+                {q: "What year was the first personal computer introduced?", options: ["1971", "1975", "1981", "1985"], correct: 1},
+                {q: "VLSI stands for?", options: ["Very Large Scale Integration", "Very Low Speed Integration", "Virtual Large Scale Integration", "Visible Integration"], correct: 0},
+                {q: "Who is known as the first computer programmer?", options: ["Charles Babbage", "Ada Lovelace", "Alan Turing", "John von Neumann"], correct: 1},
+                {q: "What does IBM stand for?", options: ["International Business Machines", "Internet Business Machines", "International Binary Machines", "Internet Binary Machines"], correct: 0},
+                {q: "CPU stands for?", options: ["Central Processing Unit", "Computer Processing Unit", "Central Program Unit", "Computer Program Unit"], correct: 0},
+                {q: "RAM stands for?", options: ["Random Access Memory", "Read Access Memory", "Random Array Memory", "Read Array Memory"], correct: 0},
+                {q: "ROM stands for?", options: ["Random Only Memory", "Read Only Memory", "Random Order Memory", "Read Order Memory"], correct: 1},
+                {q: "What is the brain of the computer?", options: ["RAM", "ROM", "CPU", "Hard Drive"], correct: 2},
+                {q: "What does GUI stand for?", options: ["Graphical User Interface", "General User Interface", "Graphical Universal Interface", "General Universal Interface"], correct: 0},
+                {q: "What is the smallest unit of data?", options: ["Byte", "Bit", "Nibble", "Word"], correct: 1},
+                {q: "How many bits are in a byte?", options: ["4", "8", "16", "32"], correct: 1},
+                {q: "What does HTML stand for?", options: ["HyperText Markup Language", "HyperText Machine Language", "HighText Markup Language", "HyperText Modern Language"], correct: 0},
+                {q: "What does URL stand for?", options: ["Universal Resource Locator", "Uniform Resource Locator", "Universal Reference Locator", "Uniform Reference Locator"], correct: 1},
+                {q: "What is an operating system?", options: ["Application software", "System software", "Hardware", "Firmware"], correct: 1},
+                {q: "Examples of operating systems include?", options: ["MS Word", "Windows", "Chrome", "Excel"], correct: 1},
+                {q: "What does HTTP stand for?", options: ["HyperText Transfer Protocol", "HyperText Translation Protocol", "HighText Transfer Protocol", "HyperText Transmission Protocol"], correct: 0},
+                {q: "What is a browser?", options: ["Operating system", "Application for accessing web", "Programming language", "Database"], correct: 1},
+                {q: "Examples of browsers include?", options: ["Windows", "Chrome", "Linux", "Android"], correct: 1},
+                {q: "What is a computer virus?", options: ["Hardware problem", "Malicious software", "Operating system", "Printer error"], correct: 1},
+                {q: "What is software?", options: ["Physical components", "Programs and data", "Monitor", "Keyboard"], correct: 1},
+                {q: "What is hardware?", options: ["Programs", "Physical components", "Data", "Files"], correct: 1},
+                {q: "Input devices include?", options: ["Monitor", "Keyboard", "Printer", "Speaker"], correct: 1},
+                {q: "Output devices include?", options: ["Mouse", "Scanner", "Monitor", "Microphone"], correct: 2},
+                {q: "What does LAN stand for?", options: ["Local Area Network", "Large Area Network", "Limited Area Network", "Long Area Network"], correct: 0},
+                {q: "What does WAN stand for?", options: ["Wide Area Network", "Wireless Area Network", "World Area Network", "Web Area Network"], correct: 0},
+                {q: "What is the purpose of a compiler?", options: ["Run programs", "Translate code", "Store data", "Display output"], correct: 1},
+                {q: "What is an algorithm?", options: ["Programming language", "Step-by-step procedure", "Computer hardware", "Software application"], correct: 1},
+                {q: "Binary system uses how many digits?", options: ["2", "8", "10", "16"], correct: 0},
+                {q: "Hexadecimal system uses how many digits?", options: ["2", "8", "10", "16"], correct: 3},
+                {q: "What is a database?", options: ["Hardware device", "Organized data collection", "Programming language", "Operating system"], correct: 1},
+                {q: "SQL stands for?", options: ["Standard Query Language", "Structured Query Language", "Simple Query Language", "System Query Language"], correct: 1},
+                {q: "What is cloud computing?", options: ["Local storage", "Internet-based computing", "Hardware upgrade", "Software installation"], correct: 1},
+                {q: "What is an IP address?", options: ["Internet Protocol address", "Internal Processing address", "Internet Processing address", "Internal Protocol address"], correct: 0},
+                {q: "What does PDF stand for?", options: ["Portable Document Format", "Public Document Format", "Private Document Format", "Personal Document Format"], correct: 0},
+                {q: "What is encryption?", options: ["Data compression", "Data security method", "Data deletion", "Data backup"], correct: 1},
+                {q: "What is a firewall?", options: ["Hardware component", "Security system", "Software application", "Network cable"], correct: 1},
+                {q: "What does USB stand for?", options: ["Universal Serial Bus", "Universal System Bus", "United Serial Bus", "United System Bus"], correct: 0},
+                {q: "What is bandwidth?", options: ["Data transfer rate", "Storage capacity", "Processing speed", "Screen resolution"], correct: 0},
+                {q: "What is malware?", options: ["Good software", "Malicious software", "System software", "Application software"], correct: 1},
+                {q: "What is phishing?", options: ["Cyber attack method", "Programming technique", "Hardware issue", "Software update"], correct: 0},
+                {q: "What does VPN stand for?", options: ["Virtual Private Network", "Virtual Public Network", "Visual Private Network", "Visual Public Network"], correct: 0}
+            ],
+            PHY111: [
+                {q: "What is the SI unit of force?", options: ["Joule", "Newton", "Watt", "Pascal"], correct: 1},
+                {q: "What is the acceleration due to gravity?", options: ["9.8 m/s²", "10 m/s²", "8.9 m/s²", "11 m/s²"], correct: 0},
+                {q: "Newton's first law is also known as?", options: ["Law of inertia", "Law of acceleration", "Law of action", "Law of momentum"], correct: 0},
+                {q: "What is the formula for kinetic energy?", options: ["mgh", "½mv²", "mv", "Fd"], correct: 1},
+                {q: "What is the SI unit of work?", options: ["Newton", "Joule", "Watt", "Pascal"], correct: 1},
+                {q: "Power is defined as?", options: ["Work/Time", "Force×Distance", "Mass×Velocity", "Force×Time"], correct: 0},
+                {q: "What is momentum?", options: ["Mass×Velocity", "Mass×Acceleration", "Force×Time", "Work/Time"], correct: 0},
+                {q: "The SI unit of pressure is?", options: ["Newton", "Pascal", "Joule", "Watt"], correct: 1},
+                {q: "What is the speed of light?", options: ["3×10⁸ m/s", "3×10⁶ m/s", "3×10⁷ m/s", "3×10⁹ m/s"], correct: 0},
+                {q: "Which law states F=ma?", options: ["Newton's First Law", "Newton's Second Law", "Newton's Third Law", "Law of Gravitation"], correct: 1},
+                {q: "What is potential energy?", options: ["Energy of motion", "Stored energy", "Heat energy", "Light energy"], correct: 1},
+                {q: "The unit of electric current is?", options: ["Volt", "Ampere", "Ohm", "Watt"], correct: 1},
+                {q: "Ohm's law states?", options: ["V=IR", "P=VI", "F=ma", "E=mc²"], correct: 0},
+                {q: "What is frequency?", options: ["Distance per time", "Cycles per second", "Force per area", "Work per time"], correct: 1},
+                {q: "The SI unit of frequency is?", options: ["Hertz", "Newton", "Joule", "Watt"], correct: 0},
+                {q: "What is wavelength?", options: ["Distance between waves", "Number of waves", "Wave speed", "Wave height"], correct: 0},
+                {q: "Sound travels fastest in?", options: ["Air", "Water", "Steel", "Vacuum"], correct: 2},
+                {q: "What is refraction?", options: ["Bending of light", "Reflection of light", "Absorption of light", "Scattering of light"], correct: 0},
+                {q: "The law of reflection states?", options: ["Angle of incidence = Angle of reflection", "Angle doubles", "Angle halves", "No relation"], correct: 0},
+                {q: "What is heat?", options: ["Form of energy", "Type of matter", "Force", "Pressure"], correct: 0},
+                {q: "Temperature is measured in?", options: ["Kelvin", "Newton", "Joule", "Pascal"], correct: 0},
+                {q: "Absolute zero is?", options: ["0°C", "-273°C", "100°C", "-100°C"], correct: 1},
+                {q: "What is convection?", options: ["Heat transfer through fluids", "Heat transfer through contact", "Heat through radiation", "No heat transfer"], correct: 0},
+                {q: "What is conduction?", options: ["Heat through contact", "Heat through fluids", "Heat through waves", "Heat through light"], correct: 0},
+                {q: "What is radiation?", options: ["Heat through waves", "Heat through contact", "Heat through fluids", "No heat"], correct: 0},
+                {q: "The first law of thermodynamics is?", options: ["Energy conservation", "Entropy increase", "Zero energy", "Infinite energy"], correct: 0},
+                {q: "What is entropy?", options: ["Disorder measure", "Energy measure", "Force measure", "Distance measure"], correct: 0},
+                {q: "What causes seasons?", options: ["Earth's tilt", "Earth's distance from sun", "Moon's position", "Sun's temperature"], correct: 0},
+                {q: "What is gravity?", options: ["Attractive force", "Repulsive force", "Magnetic force", "Electric force"], correct: 0},
+                {q: "Mass is measured in?", options: ["Kilograms", "Newtons", "Joules", "Watts"], correct: 0},
+                {q: "Weight is measured in?", options: ["Kilograms", "Newtons", "Grams", "Pounds only"], correct: 1},
+                {q: "What is friction?", options: ["Opposing force to motion", "Force of attraction", "Force in space", "Magnetic force"], correct: 0},
+                {q: "Coefficient of friction is?", options: ["Dimensionless", "Has units", "Always 1", "Always 0"], correct: 0},
+                {q: "What is velocity?", options: ["Speed with direction", "Distance only", "Time only", "Force only"], correct: 0},
+                {q: "What is acceleration?", options: ["Change in velocity", "Constant speed", "Zero motion", "Force"], correct: 0},
+                {q: "Free fall means?", options: ["Only gravity acts", "No forces", "Multiple forces", "Constant velocity"], correct: 0},
+                {q: "Terminal velocity occurs when?", options: ["Drag equals weight", "Speed is maximum", "No gravity", "In vacuum"], correct: 0},
+                {q: "What is displacement?", options: ["Change in position", "Total distance", "Speed", "Time"], correct: 0},
+                {q: "Scalar quantities have?", options: ["Magnitude only", "Direction only", "Both", "Neither"], correct: 0},
+                {q: "Vector quantities have?", options: ["Magnitude and direction", "Magnitude only", "Direction only", "Neither"], correct: 0},
+                {q: "What is uniform motion?", options: ["Constant velocity", "Changing velocity", "Zero velocity", "Infinite velocity"], correct: 0},
+                {q: "What is projectile motion?", options: ["2D motion under gravity", "1D motion", "Circular motion", "No motion"], correct: 0},
+                {q: "Centripetal force acts?", options: ["Toward center", "Away from center", "Tangentially", "Randomly"], correct: 0},
+                {q: "Angular velocity is measured in?", options: ["Radians per second", "Meters per second", "Newtons", "Joules"], correct: 0},
+                {q: "What is torque?", options: ["Rotational force", "Linear force", "Pressure", "Energy"], correct: 0},
+                {q: "Moment of inertia depends on?", options: ["Mass distribution", "Velocity", "Force", "Time"], correct: 0},
+                {q: "Conservation of energy means?", options: ["Energy cannot be created or destroyed", "Energy increases", "Energy decreases", "Energy is constant"], correct: 0},
+                {q: "What is elastic collision?", options: ["KE conserved", "KE lost", "KE gained", "No collision"], correct: 0},
+                {q: "What is inelastic collision?", options: ["KE not conserved", "KE conserved", "No momentum", "Perfect collision"], correct: 0}
+            ],
+            CSC101: [
+                {q: "What does PC stand for?", options: ["Personal Computer", "Public Computer", "Private Computer", "Professional Computer"], correct: 0},
+                {q: "The motherboard is?", options: ["Main circuit board", "Power supply", "Storage device", "Display unit"], correct: 0},
+                {q: "BIOS stands for?", options: ["Basic Input Output System", "Binary Input Output System", "Basic Internal Operating System", "Binary Internal Operating System"], correct: 0},
+                {q: "What is the function of RAM?", options: ["Temporary storage", "Permanent storage", "Processing", "Display"], correct: 0},
+                {q: "Hard disk is a?", options: ["Storage device", "Input device", "Output device", "Processing unit"], correct: 0},
+                {q: "SSD stands for?", options: ["Solid State Drive", "Super Storage Drive", "System State Drive", "Solid Storage Device"], correct: 0},
+                {q: "What is the purpose of a power supply?", options: ["Provide electricity", "Store data", "Process information", "Display output"], correct: 0},
+                {q: "GPU stands for?", options: ["Graphics Processing Unit", "General Processing Unit", "Graphics Program Unit", "General Program Unit"], correct: 0},
+                {q: "What is a heat sink?", options: ["Cooling device", "Storage device", "Input device", "Power device"], correct: 0},
+                {q: "What does POST stand for?", options: ["Power On Self Test", "Program Operation System Test", "Power Operation System Test", "Program On Self Test"], correct: 0},
+                {q: "Which port is for network connection?", options: ["USB", "HDMI", "Ethernet", "VGA"], correct: 2},
+                {q: "HDMI stands for?", options: ["High Definition Multimedia Interface", "High Digital Media Interface", "High Definition Media Input", "High Digital Multimedia Input"], correct: 0},
+                {q: "USB port is used for?", options: ["Connecting peripherals", "Network only", "Display only", "Power only"], correct: 0},
+                {q: "What is thermal paste used for?", options: ["Heat transfer", "Cleaning", "Adhesive", "Insulation"], correct: 0},
+                {q: "What is a chipset?", options: ["Group of integrated circuits", "Single chip", "Storage device", "Display unit"], correct: 0},
+                {q: "What does CMOS stand for?", options: ["Complementary Metal Oxide Semiconductor", "Computer Memory Operating System", "Central Memory Operating System", "Computer Metal Oxide System"], correct: 0},
+                {q: "What is overclocking?", options: ["Increasing clock speed", "Decreasing speed", "Normal operation", "Stopping CPU"], correct: 0},
+                {q: "What is a driver?", options: ["Software for hardware", "Hardware component", "Storage device", "Network cable"], correct: 0},
+                {q: "RAID stands for?", options: ["Redundant Array of Independent Disks", "Random Array of Disks", "Redundant Array of Internal Disks", "Random Array of Independent Disks"], correct: 0},
+                {q: "What is firmware?", options: ["Software in hardware", "Hardware only", "Temporary software", "Operating system"], correct: 0},
+                {q: "LCD stands for?", options: ["Liquid Crystal Display", "Light Crystal Display", "Liquid Computer Display", "Light Computer Display"], correct: 0},
+                {q: "LED stands for?", options: ["Light Emitting Diode", "Light Electronic Display", "Liquid Emitting Diode", "Light Electronic Diode"], correct: 0},
+                {q: "What is a peripheral?", options: ["External device", "Internal component", "Software", "Operating system"], correct: 0},
+                {q: "What is plug and play?", options: ["Auto device recognition", "Manual installation", "No installation", "Complex setup"], correct: 0},
+                {q: "What is a port?", options: ["Connection interface", "Storage device", "Processing unit", "Display"], correct: 0},
+                {q: "What is cache memory?", options: ["Fast temporary storage", "Permanent storage", "Slow storage", "No storage"], correct: 0},
+                {q: "L1 cache is?", options: ["Fastest cache", "Slowest cache", "No cache", "External cache"], correct: 0},
+                {q: "What is virtual memory?", options: ["Hard disk as RAM", "Extra RAM", "No memory", "Cache only"], correct: 0},
+                {q: "What is formatting?", options: ["Preparing storage", "Copying data", "Moving files", "Reading data"], correct: 0},
+                {q: "What is partitioning?", options: ["Dividing storage", "Merging storage", "Deleting storage", "Creating storage"], correct: 0},
+                {q: "What is defragmentation?", options: ["Organizing files", "Deleting files", "Copying files", "Creating files"], correct: 0},
+                {q: "What is a registry?", options: ["System database", "Storage device", "Network protocol", "Display setting"], correct: 0},
+                {q: "What is safe mode?", options: ["Diagnostic startup", "Normal startup", "Fast startup", "No startup"], correct: 0},
+                {q: "What is system restore?", options: ["Reverting to previous state", "Installing new system", "Updating system", "Deleting system"], correct: 0},
+                {q: "What is a backup?", options: ["Data copy", "Data deletion", "Data modification", "Data creation"], correct: 0},
+                {q: "What is malware removal?", options: ["Cleaning infected files", "Installing software", "Updating system", "Creating files"], correct: 0},
+                {q: "What is antivirus software?", options: ["Security program", "Storage program", "Display program", "Network program"], correct: 0},
+                {q: "What is updating?", options: ["Installing new versions", "Deleting programs", "Creating files", "Formatting drive"], correct: 0},
+                {q: "What is troubleshooting?", options: ["Problem solving", "Normal operation", "Installation", "Configuration"], correct: 0},
+                {q: "What is a blue screen?", options: ["System error", "Normal screen", "Game screen", "Browser screen"], correct: 0},
+                {q: "What does PSU stand for?", options: ["Power Supply Unit", "Program Supply Unit", "Processing Supply Unit", "Peripheral Supply Unit"], correct: 0},
+                {q: "What is cooling fan for?", options: ["Heat dissipation", "Power supply", "Data storage", "Display"], correct: 0},
+                {q: "What is a jumper?", options: ["Configuration device", "Storage device", "Display device", "Input device"], correct: 0},
+                {q: "What is ESD?", options: ["Electrostatic Discharge", "Electronic System Device", "Electrical Storage Device", "Electronic Static Display"], correct: 0},
+                {q: "What are expansion slots for?", options: ["Adding cards", "Storage", "Display", "Power"], correct: 0},
+                {q: "What is a sound card?", options: ["Audio processing", "Video processing", "Network processing", "Storage processing"], correct: 0},
+                {q: "What is a network card?", options: ["Network connectivity", "Sound output", "Video output", "Power supply"], correct: 0},
+                {q: "What is cable management?", options: ["Organizing cables", "Cutting cables", "Creating cables", "Testing cables"], correct: 0},
+                {q: "What is POST beep code?", options: ["Error indication", "Success sound", "Music", "Alarm"], correct: 0},
+                {q: "What is a boot device?", options: ["Startup device", "Storage device", "Display device", "Input device"], correct: 0}
+            ],
+            MTH101: [
+                {q: "What is 2 + 2?", options: ["3", "4", "5", "6"], correct: 1},
+                {q: "What is 5 × 3?", options: ["15", "8", "12", "20"], correct: 0},
+                {q: "What is 10 ÷ 2?", options: ["5", "8", "2", "20"], correct: 0},
+                {q: "What is 8 - 3?", options: ["5", "11", "4", "6"], correct: 0},
+                {q: "Square root of 16?", options: ["4", "8", "2", "16"], correct: 0},
+                {q: "What is 2³?", options: ["6", "8", "9", "4"], correct: 1},
+                {q: "What is 50% of 100?", options: ["50", "25", "75", "100"], correct: 0},
+                {q: "What is the value of π (pi)?", options: ["3.14", "2.71", "1.41", "1.73"], correct: 0},
+                {q: "What is 7 + 8?", options: ["15", "14", "16", "13"], correct: 0},
+                {q: "What is 12 × 12?", options: ["144", "124", "134", "154"], correct: 0},
+                {q: "What is 100 ÷ 4?", options: ["25", "20", "30", "24"], correct: 0},
+                {q: "What is 20 - 7?", options: ["13", "14", "12", "15"], correct: 0},
+                {q: "Square root of 25?", options: ["5", "25", "10", "15"], correct: 0},
+                {q: "What is 3²?", options: ["9", "6", "3", "12"], correct: 0},
+                {q: "What is 25% of 200?", options: ["50", "100", "25", "75"], correct: 0},
+                {q: "What is the value of e?", options: ["2.71", "3.14", "1.41", "1.73"], correct: 0},
+                {q: "What is 9 + 6?", options: ["15", "14", "16", "13"], correct: 0},
+                {q: "What is 11 × 11?", options: ["121", "111", "131", "141"], correct: 0},
+                {q: "What is 80 ÷ 5?", options: ["16", "15", "17", "18"], correct: 0},
+                {q: "What is 30 - 12?", options: ["18", "17", "19", "20"], correct: 0},
+                {q: "Square root of 36?", options: ["6", "36", "12", "18"], correct: 0},
+                {q: "What is 4²?", options: ["16", "8", "4", "12"], correct: 0},
+                {q: "What is 10% of 500?", options: ["50", "100", "25", "75"], correct: 0},
+                {q: "In a right triangle, a² + b² = ?", options: ["c²", "a+b", "ab", "c"], correct: 0},
+                {q: "What is 13 + 7?", options: ["20", "19", "21", "18"], correct: 0},
+                {q: "What is 9 × 7?", options: ["63", "56", "72", "54"], correct: 0},
+                {q: "What is 45 ÷ 9?", options: ["5", "4", "6", "7"], correct: 0},
+                {q: "What is 50 - 23?", options: ["27", "26", "28", "29"], correct: 0},
+                {q: "Square root of 49?", options: ["7", "49", "14", "21"], correct: 0},
+                {q: "What is 5²?", options: ["25", "10", "5", "15"], correct: 0},
+                {q: "What is 75% of 80?", options: ["60", "40", "50", "70"], correct: 0},
+                {q: "Sum of angles in a triangle?", options: ["180°", "360°", "90°", "270°"], correct: 0},
+                {q: "What is 17 + 13?", options: ["30", "29", "31", "28"], correct: 0},
+                {q: "What is 8 × 9?", options: ["72", "63", "81", "56"], correct: 0},
+                {q: "What is 64 ÷ 8?", options: ["8", "7", "9", "6"], correct: 0},
+                {q: "What is 40 - 15?", options: ["25", "24", "26", "27"], correct: 0},
+                {q: "Square root of 64?", options: ["8", "64", "16", "32"], correct: 0},
+                {q: "What is 6²?", options: ["36", "12", "6", "18"], correct: 0},
+                {q: "What is 20% of 150?", options: ["30", "25", "35", "40"], correct: 0},
+                {q: "Perimeter of a square with side 5?", options: ["20", "25", "15", "30"], correct: 0},
+                {q: "What is 19 + 11?", options: ["30", "29", "31", "28"], correct: 0},
+                {q: "What is 7 × 8?", options: ["56", "63", "72", "49"], correct: 0},
+                {q: "What is 81 ÷ 9?", options: ["9", "8", "10", "7"], correct: 0},
+                {q: "What is 60 - 27?", options: ["33", "32", "34", "35"], correct: 0},
+                {q: "Square root of 81?", options: ["9", "81", "18", "27"], correct: 0},
+                {q: "What is 7²?", options: ["49", "14", "7", "21"], correct: 0},
+                {q: "What is 30% of 200?", options: ["60", "50", "70", "80"], correct: 0},
+                {q: "Area of rectangle 5×4?", options: ["20", "9", "18", "16"], correct: 0},
+                {q: "What is 15 + 25?", options: ["40", "39", "41", "38"], correct: 0},
+                {q: "What is the next prime after 7?", options: ["11", "9", "10", "13"], correct: 0}
+            ]
+        };
+
+        // Global variables
+        let currentUser = null;
+        let selectedCourse = null;
+        let questionCount = 10;
+        let timerMinutes = 5;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let timerInterval = null;
+        let timeRemaining = 0;
+
+        // Initialize users from memory
+        let users = {};
+
+        // Authentication Functions
+        function showRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+        }
+
+        function register() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (!name || !email || !password || !confirmPassword) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            if (users[email]) {
+                alert('Email already registered');
+                return;
+            }
+
+            users[email] = { name, password };
+            alert('Registration successful! Please login.');
+            showLogin();
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            if (!users[email]) {
+                alert('Email not found. Please register first.');
+                return;
+            }
+
+            if (users[email].password !== password) {
+                alert('Incorrect password');
+                return;
+            }
+
+            currentUser = users[email];
+            document.getElementById('userName').textContent = currentUser.name;
+            showSection('courseSelection');
+            document.getElementById('logoutBtn').style.display = 'block';
+        }
+
+        function logout() {
+            currentUser = null;
+            showSection('authSection');
+            document.getElementById('logoutBtn').style.display = 'none';
+            resetTest();
+        }
+
+        // Navigation Functions
+        function showSection(sectionId) {
+            const sections = ['authSection', 'courseSelection', 'testConfig', 'testSection', 'resultsSection'];
+            sections.forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function selectCourse(courseCode) {
+            selectedCourse = courseCode;
+            document.getElementById('selectedCourseName').textContent = courseCode;
+            showSection('testConfig');
+        }
+
+        function selectQuestionCount(count) {
+            questionCount = count;
+            document.querySelectorAll('.option-group:first-child .option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        function selectTimer(minutes) {
+            timerMinutes = minutes;
+            document.querySelectorAll('.option-group:last-child .option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        function backToCourses() {
+            resetTest();
+            showSection('courseSelection');
+        }
+
+        // Test Functions
+        function startTest() {
+            if (!questionCount || !timerMinutes) {
+                alert('Please select number of questions and timer');
+                return;
+            }
+
+            // Get random questions
+            const allQuestions = questionBank[selectedCourse];
+            currentQuestions = [];
+            const usedIndices = new Set();
+            
+            while (currentQuestions.length < Math.min(questionCount, allQuestions.length)) {
+                const randomIndex = Math.floor(Math.random() * allQuestions.length);
+                if (!usedIndices.has(randomIndex)) {
+                    usedIndices.add(randomIndex);
+                    currentQuestions.push(allQuestions[randomIndex]);
+                }
+            }
+
+            userAnswers = new Array(currentQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+            
+            // Start timer
+            timeRemaining = timerMinutes * 60;
+            startTimer();
+
+            showSection('testSection');
+            displayQuestion();
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function displayQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            
+            document.getElementById('questionNumber').textContent = 
+                `Question ${currentQuestionIndex + 1} of ${currentQuestions.length}`;
+            document.getElementById('questionText').textContent = question.q;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                if (userAnswers[currentQuestionIndex] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            // Update progress
+            const progress = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextBtn').textContent = 
+                currentQuestionIndex === currentQuestions.length - 1 ? 'Submit' : 'Next';
+        }
+
+        function selectAnswer(answerIndex) {
+            userAnswers[currentQuestionIndex] = answerIndex;
+            displayQuestion();
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex === currentQuestions.length - 1) {
+                submitTest();
+            } else {
+                currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        function submitTest() {
+            clearInterval(timerInterval);
+            
+            let correct = 0;
+            let wrong = 0;
+            
+            currentQuestions.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    correct++;
+                } else {
+                    wrong++;
+                }
+            });
+
+            const percentage = Math.round((correct / currentQuestions.length) * 100);
+
+            document.getElementById('scorePercentage').textContent = percentage;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('wrongCount').textContent = wrong;
+            document.getElementById('totalCount').textContent = currentQuestions.length;
+
+            showSection('resultsSection');
+        }
+
+        function resetTest() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            currentQuestions = [];
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            timeRemaining = 0;
+        }
+
+        // Initialize
+        window.onload = function() {
+            showSection('authSection');
+        };
+    </script>
+</body>
+</html>
